@@ -22,19 +22,14 @@ for /f %%i in ('dir /b *StorePurchaseApp*.appxbundle 2^>nul') do set "PurchaseAp
 if exist "*DesktopAppInstaller*.appxbundle" if exist "*DesktopAppInstaller*.xml" (
 for /f %%i in ('dir /b *DesktopAppInstaller*.appxbundle 2^>nul') do set "AppInstaller=%%i"
 )
-if exist "*XboxIdentityProvider*.appxbundle" if exist "*XboxIdentityProvider*.xml" (
-for /f %%i in ('dir /b *XboxIdentityProvider*.appxbundle 2^>nul') do set "XboxIdentity=%%i"
-)
 
 if /i %arch%==x64 (
 set "DepStore=%VCLibsX64%,%VCLibsX86%,%Framework6X64%,%Framework6X86%,%Runtime6X64%,%Runtime6X86%"
 set "DepPurchase=%VCLibsX64%,%VCLibsX86%,%Framework6X64%,%Framework6X86%,%Runtime6X64%,%Runtime6X86%"
-set "DepXbox=%VCLibsX64%,%VCLibsX86%,%Framework6X64%,%Framework6X86%,%Runtime6X64%,%Runtime6X86%"
 set "DepInstaller=%VCLibsX64%,%VCLibsX86%"
 ) else (
 set "DepStore=%VCLibsX86%,%Framework6X86%,%Runtime6X86%"
 set "DepPurchase=%VCLibsX86%,%Framework6X86%,%Runtime6X86%"
-set "DepXbox=%VCLibsX86%,%Framework6X86%,%Runtime6X86%"
 set "DepInstaller=%VCLibsX86%"
 )
 
@@ -73,16 +68,6 @@ echo.
 1>nul 2>nul %PScommand% Add-AppxProvisionedPackage -Online -PackagePath %AppInstaller% -DependencyPackagePath %DepInstaller% -LicensePath Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.xml
 %PScommand% Add-AppxPackage -Path %AppInstaller%
 )
-if defined XboxIdentity (
-echo.
-echo ============================================================
-echo Adding Xbox Identity Provider
-echo ============================================================
-echo.
-1>nul 2>nul %PScommand% Add-AppxProvisionedPackage -Online -PackagePath %XboxIdentity% -DependencyPackagePath %DepXbox% -LicensePath Microsoft.XboxIdentityProvider_8wekyb3d8bbwe.xml
-%PScommand% Add-AppxPackage -Path %XboxIdentity%
-)
-goto :fin
 
 :uac
 echo.
